@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Digital Crisis Command Center — Real-Time Emergency Management Platform
 
 An integrated real-time **Digital Crisis Command Center** that brings fragmented emergency information into one centralized platform. It enables authorities to detect incidents, classify severity, calculate priority rankings, coordinate resources, solve safe emergency routes, manage evacuation plans, communicate multilingual warnings, and monitor response metrics from a single command center.
@@ -92,3 +93,7 @@ python -m pytest -v
 ## 📜 Tagline & Motto
 
 **DETECT. COORDINATE. RESPOND. RESOLVE.**
+=======
+# CrisisGrid
+Real-Time Emergency Response &amp; Coordination Platform
+>>>>>>> e7c10ed2a7ed87eb6ce29e7a1455af8eca1d1549
