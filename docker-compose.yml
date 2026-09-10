@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15-alpine
+    container_name: crisis_postgres
+    environment:
+      POSTGRES_USER: crisis_user
+      POSTGRES_PASSWORD: crisis_password_2026
+      POSTGRES_DB: crisis_command_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: crisis_backend
+    environment:
+      DATABASE_URL: postgresql://crisis_user:crisis_password_2026@database:5432/crisis_command_db
+      SECRET_KEY: CRISIS_COMMAND_CENTER_SECRET_KEY_SUPER_SECURE_2026
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: crisis_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Crisis Command Center — Pure HTML/CSS/JS Platform</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Custom Pure CSS -->
+  <link rel="stylesheet" href="/static/css/style.css?v=20260911_v7">
+</head>
+<body>
+
+  <!-- Top KPI Counter Bar -->
+  <div class="top-kpi-bar">
+    <div class="kpi-group">
+      <div class="kpi-item">
+        <span style="color:#94a3b8; font-weight:600;" data-i18n="kpi_active">ACTIVE INCIDENTS:</span>
+        <span id="kpi-active" class="kpi-badge kpi-cyan">12</span>
+      </div>
+      <div class="kpi-item">
+        <span style="color:#94a3b8; font-weight:600;" data-i18n="kpi_critical">CRITICAL:</span>
+        <span id="kpi-critical" class="kpi-badge kpi-red">3</span>
+      </div>
+      <div class="kpi-item">
+        <span style="color:#94a3b8; font-weight:600;" data-i18n="kpi_high">HIGH PRIORITY:</span>
+        <span id="kpi-high" class="kpi-badge kpi-amber">4</span>
+      </div>
+      <div class="kpi-item">
+        <span style="color:#94a3b8; font-weight:600;" data-i18n="kpi_ambulances">AMBULANCES:</span>
+        <span id="kpi-ambulances" class="kpi-badge kpi-emerald">9</span>
+      </div>
+      <div class="kpi-item">
+        <span style="color:#94a3b8; font-weight:600;" data-i18n="kpi_rescue">RESCUE TEAMS:</span>
+        <span id="kpi-rescue" class="kpi-badge kpi-cyan">6</span>
+      </div>
+      <div class="kpi-item">
+        <span style="color:#94a3b8; font-weight:600;" data-i18n="kpi_beds">HOSPITAL BEDS:</span>
+        <span id="kpi-beds" class="kpi-badge kpi-purple">48</span>
+      </div>
+      <div class="kpi-item">
+        <span style="color:#94a3b8; font-weight:600;" data-i18n="kpi_shelters">SHELTER CAP:</span>
+        <span id="kpi-shelters" class="kpi-badge kpi-emerald">2400</span>
+      </div>
+    </div>
+
+    <div style="font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:#10b981; display:flex; align-items:center; gap:6px;">
+      <span style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block;"></span>
+      <span data-i18n="live_ws">LIVE WEBSOCKETS</span>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header class="main-header">
+    <div class="brand-title">
+      <div class="brand-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <h1 id="title-text" style="font-size:1.1rem; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+          CrisisGrid: Real-Time Emergency Response &amp; Coordination Platform
+        </h1>
+        <p id="tagline-text" style="font-size:0.7rem; color:#94a3b8; font-family:'JetBrains Mono', monospace;">
+          DETECT. COORDINATE. RESPOND. RESOLVE.
+        </p>
+      </div>
+    </div>
+
+    <!-- Header Controls -->
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button id="btn-auto-stream-hdr" onclick="toggleAutoLiveStream()" style="background:#059669; color:#fff; font-weight:800; font-size:0.75rem; padding:8px 14px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.3);">
+        ⚡ START IOT STREAM
+      </button>
+
+      <button onclick="openDemoModal()" style="background:linear-gradient(135deg, #f59e0b, #ea580c); color:#0b0f19; font-weight:800; font-size:0.75rem; padding:8px 14px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(245,158,11,0.3);" data-i18n="btn_run_demo">
+        ▶ RUN FLOOD DEMO SCENARIO
+      </button>
+
+      <!-- Multilingual Picker -->
+      <div style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:2px; display:flex; gap:2px;">
+        <button id="btn-lang-en" onclick="setLanguage('en')" class="lang-btn" style="background:#06b6d4; color:#fff; font-size:0.7rem; font-weight:bold; padding:4px 8px; border:none; border-radius:6px; cursor:pointer;">EN</button>
+        <button id="btn-lang-te" onclick="setLanguage('te')" class="lang-btn" style="background:transparent; color:#94a3b8; font-size:0.7rem; font-weight:bold; padding:4px 8px; border:none; border-radius:6px; cursor:pointer;">తెలుగు</button>
+        <button id="btn-lang-hi" onclick="setLanguage('hi')" class="lang-btn" style="background:transparent; color:#94a3b8; font-size:0.7rem; font-weight:bold; padding:4px 8px; border:none; border-radius:6px; cursor:pointer;">हिन्दी</button>
+      </div>
+
+      <!-- Quick Role Switcher -->
+      <div style="background:#0f172a; border:1px solid #334155; border-radius:8px; padding:4px 8px; font-size:0.75rem;">
+        <span style="color:#94a3b8; margin-right:4px;" data-i18n="role_label">ROLE:</span>
+        <select onchange="setRole(this.value)" style="background:transparent; color:#22d3ee; font-weight:bold; border:none; outline:none; cursor:pointer;">
+          <option value="AUTHORITY" data-i18n="role_authority">AUTHORITY</option>
+          <option value="RESCUE_TEAM" data-i18n="role_rescue">RESCUE TEAM</option>
+          <option value="HOSPITAL" data-i18n="role_hospital">HOSPITAL</option>
+          <option value="SHELTER" data-i18n="role_shelter">SHELTER</option>
+          <option value="CITIZEN" data-i18n="role_citizen">CITIZEN</option>
+          <option value="ADMIN" data-i18n="role_admin">ADMIN</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout -->
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div style="font-size:0.65rem; font-family:'JetBrains Mono', monospace; color:#64748b; margin-bottom:8px; padding-left:8px;" data-i18n="sidebar_header">
+          COMMAND OPERATIONS
+        </div>
+        <div id="nav-command-center" class="nav-link active" onclick="switchTab('command-center')" data-i18n="nav_command_center">🗺️ Live Crisis Map</div>
+        <div id="nav-incidents" class="nav-link" onclick="switchTab('command-center')" data-i18n="nav_incidents">🛡️ Incident Operations</div>
+        <div id="nav-resources" class="nav-link" onclick="switchTab('resources')" data-i18n="nav_resources">🚛 Resource Allocation</div>
+        <div id="nav-routes" class="nav-link" onclick="switchTab('routes')" data-i18n="nav_routes">↗️ Emergency Route Solver</div>
+        <div id="nav-evacuation" class="nav-link" onclick="switchTab('evacuation')" data-i18n="nav_evacuation">🔄 Evacuation Planner</div>
+        <div id="nav-sensors" class="nav-link" onclick="switchTab('sensors')" data-i18n="nav_sensors">📡 IoT Sensor Telemetry</div>
+        <div id="nav-alerts" class="nav-link" onclick="switchTab('alerts')" data-i18n="nav_alerts">📢 Emergency Alert Broadcast</div>
+        <div id="nav-hospitals" class="nav-link" onclick="switchTab('hospitals')" data-i18n="nav_hospitals">🏥 Hospital Capacity</div>
+        <div id="nav-shelters" class="nav-link" onclick="switchTab('shelters')" data-i18n="nav_shelters">🏠 Relief Shelters</div>
+        <div id="nav-analytics" class="nav-link" onclick="switchTab('analytics')" data-i18n="nav_analytics">📊 Crisis Analytics & KPIs</div>
+        <div id="nav-simulation" class="nav-link" onclick="switchTab('simulation')" data-i18n="nav_simulation">⚙️ Disaster Simulation</div>
+        <div id="nav-audit" class="nav-link" onclick="switchTab('audit')" data-i18n="nav_audit">📜 Audit Trail History</div>
+        <div id="nav-citizen-portal" class="nav-link" onclick="switchTab('citizen-portal')" data-i18n="nav_citizen_portal">👤 Citizen Reporting Portal</div>
+        <div id="nav-rescue-dashboard" class="nav-link" onclick="switchTab('rescue-dashboard')" data-i18n="nav_rescue_dashboard">🛟 Rescue Team Board</div>
+      </div>
+
+      <div style="padding:8px; border-top:1px solid #1e293b; font-size:0.7rem; color:#94a3b8; font-family:'JetBrains Mono', monospace;">
+        <span data-i18n="active_role_label">Active Role:</span> <strong id="active-role-display" style="color:#22d3ee;">AUTHORITY</strong>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- 1-Click Quick Commands Panel -->
+      <div class="glass-panel" style="padding:16px; margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 style="font-size:0.75rem; font-family:'JetBrains Mono', monospace; color:#22d3ee; font-weight:bold; display:flex; align-items:center; gap:6px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#22d3ee;"></span>
+            <span data-i18n="qa_title">EMERGENCY COMMAND QUICK ACTIONS</span>
+          </h3>
+          <span style="font-size:0.65rem; font-family:'JetBrains Mono', monospace; color:#64748b;" data-i18n="qa_tag">1-CLICK OPERATION DISPATCH</span>
+        </div>
+
+        <div class="quick-actions-bar">
+          <button onclick="triggerQuickAction('SEND_ALERT')" class="btn-action btn-amber" data-i18n="qa_alert">📢 SEND ALERT</button>
+          <button onclick="triggerQuickAction('DISPATCH_AMBULANCE')" class="btn-action btn-emerald" data-i18n="qa_ambulance">🚑 DISPATCH AMBULANCE</button>
+          <button onclick="triggerQuickAction('DISPATCH_RESCUE')" class="btn-action btn-blue" data-i18n="qa_rescue">👨‍🚒 DISPATCH RESCUE</button>
+          <button onclick="triggerQuickAction('CONTACT_HOSPITAL')" class="btn-action btn-purple" data-i18n="qa_hospital">🏥 CONTACT HOSPITAL</button>
+          <button onclick="triggerQuickAction('ACTIVATE_SHELTER')" class="btn-action btn-teal" data-i18n="qa_shelter">🏠 ACTIVATE SHELTER</button>
+          <button onclick="triggerQuickAction('FIND_ROUTE')" class="btn-action btn-cyan" data-i18n="qa_route">🛣 FIND SAFE ROUTE</button>
+          <button onclick="triggerQuickAction('START_EVACUATION')" class="btn-action btn-red" data-i18n="qa_evacuate">🚨 START EVACUATION</button>
+        </div>
+      </div>
+
+      <!-- Tab: Command Center (Map + Incidents + Route Solver) -->
+      <div id="tab-content-command-center" class="tab-content">
+        <!-- Leaflet Crisis Map Viewport -->
+        <div class="map-viewport">
+          <!-- Quick Center Controls (Top Left) -->
+          <div class="map-controls-overlay">
+            <button onclick="resetMapToIndia()" class="map-btn active" data-i18n="map_center_india">📍 CENTER: INDIA</button>
+            <button onclick="resetMapToWorld()" class="map-btn" data-i18n="map_center_world">🌍 WORLD VIEW</button>
+          </div>
+
+          <!-- Tactical Overlay Floating Widget (Top Right - Matches Screenshot!) -->
+          <div class="tactical-layers-widget">
+            <div class="widget-header" data-i18n="tactical_layers">
+              TACTICAL LAYERS
+            </div>
+            <div class="tactical-layer-list">
+              <label class="tactical-layer-item">
+                <input type="checkbox" id="layer-disasters" checked onchange="toggleMapLayer('disasters', this.checked)">
+                <span class="layer-name"><span data-i18n="layer_disasters">🚨 Disasters</span> (<span id="count-disasters">11</span>)</span>
+              </label>
+              <label class="tactical-layer-item">
+                <input type="checkbox" id="layer-sensors" checked onchange="toggleMapLayer('sensors', this.checked)">
+                <span class="layer-name"><span data-i18n="layer_sensors">📡 IoT Sensors</span> (<span id="count-sensors">8</span>)</span>
+              </label>
+              <label class="tactical-layer-item">
+                <input type="checkbox" id="layer-hospitals" checked onchange="toggleMapLayer('hospitals', this.checked)">
+                <span class="layer-name"><span data-i18n="layer_hospitals">🏥 Hospitals</span> (<span id="count-hospitals">4</span>)</span>
+              </label>
+              <label class="tactical-layer-item">
+                <input type="checkbox" id="layer-shelters" checked onchange="toggleMapLayer('shelters', this.checked)">
+                <span class="layer-name"><span data-i18n="layer_shelters">⛺ Shelters</span> (<span id="count-shelters">4</span>)</span>
+              </label>
+              <label class="tactical-layer-item">
+                <input type="checkbox" id="layer-threats" checked onchange="toggleMapLayer('threats', this.checked)">
+                <span class="layer-name" data-i18n="layer_threats">🛡️ Threat Polygons</span>
+              </label>
+            </div>
+
+            <div class="widget-header" style="margin-top:10px;" data-i18n="basemap_style">
+              🌐 BASEMAP STYLE:
+            </div>
+            <div class="basemap-grid">
+              <button onclick="setMapLayerMode('DARK')" id="btn-bm-dark" class="bm-btn" data-i18n="bm_dark">DARK TACTICAL</button>
+              <button onclick="setMapLayerMode('STREETS')" id="btn-bm-streets" class="bm-btn active" data-i18n="bm_streets">WORLD STREETS</button>
+              <button onclick="setMapLayerMode('POLITICAL')" id="btn-bm-political" class="bm-btn" data-i18n="bm_political">POLITICAL OSM</button>
+              <button onclick="setMapLayerMode('SATELLITE')" id="btn-bm-satellite" class="bm-btn" data-i18n="bm_satellite">SATELLITE</button>
+            </div>
+          </div>
+
+          <!-- Bottom Left Status Badge -->
+          <div class="map-bottom-status">
+            <span class="pulse-dot"></span> <span data-i18n="map_status_badge">PAN-INDIA &amp; GLOBAL NATURAL DISASTER MATRIX ACTIVE</span>
+          </div>
+
+          <div id="crisis-map"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+          <!-- Incidents Directory Card -->
+          <div class="glass-panel" style="padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div>
+                <h3 style="font-size:1rem; font-weight:bold; color:#fff;" data-i18n="inc_dir_title">INCIDENT OPERATIONS DIRECTORY</h3>
+                <p style="font-size:0.7rem; color:#94a3b8;" data-i18n="inc_dir_sub">Sorted by Priority Score (0-100+)</p>
+              </div>
+              <button onclick="openCreateIncidentModal()" style="background:#0891b2; color:#0b0f19; font-weight:bold; font-size:0.75rem; padding:6px 12px; border-radius:8px; border:none; cursor:pointer;" data-i18n="btn_new_inc">
+                + NEW INCIDENT
+              </button>
+            </div>
+            <div id="incident-list-container"></div>
+          </div>
+
+          <!-- Emergency Route Calculator Card -->
+          <div class="glass-panel" style="padding:20px;">
+            <h3 style="font-size:1rem; font-weight:bold; color:#fff; margin-bottom:4px;" data-i18n="route_solver_title">EMERGENCY ROUTE NAVIGATION SOLVER</h3>
+            <p style="font-size:0.7rem; color:#94a3b8; margin-bottom:16px;" data-i18n="route_solver_sub">Dijkstra pathfinder avoiding flooded & blocked road segments</p>
+
+            <form onsubmit="handleCalculateRoute(event)" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+              <div>
+                <label class="form-label" data-i18n="label_res_coords">RESOURCE LAT/LNG</label>
+                <input type="text" value="17.3850, 78.4867" class="form-input" readonly />
+              </div>
+              <div>
+                <label class="form-label" data-i18n="label_dest_coords">EMERGENCY DESTINATION</label>
+                <input type="text" value="17.4100, 78.5100" class="form-input" readonly />
+              </div>
+              <div style="grid-column: span 2;">
+                <button type="submit" class="btn-primary" data-i18n="btn_calc_route">CALCULATE SAFE BYPASS ROUTE</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Dedicated Resources Page -->
+      <div id="tab-content-resources" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:12px;" data-i18n="resources_title">EMERGENCY RESOURCE FLEET DIRECTORY</h3>
+          <div id="resource-list-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Dedicated Hospitals Page -->
+      <div id="tab-content-hospitals" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:12px;" data-i18n="hospitals_title">HOSPITAL BED & EMERGENCY CAPACITY</h3>
+          <div id="hospital-list-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Dedicated Shelters Page -->
+      <div id="tab-content-shelters" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:12px;" data-i18n="shelters_title">RELIEF SHELTER OCCUPANCY & SUPPLIES</h3>
+          <div id="shelter-list-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Dedicated IoT Sensors Page -->
+      <div id="tab-content-sensors" class="tab-content" style="display:none;">
+        <!-- Telemetry Simulator Bar (Matches User Screenshot!) -->
+        <div class="glass-panel" style="padding:16px; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:40px; height:40px; border-radius:10px; background:rgba(6,182,212,0.15); border:1px solid rgba(6,182,212,0.3); display:flex; align-items:center; justify-content:center; color:#22d3ee; font-size:18px;">
+                📡
+              </div>
+              <div>
+                <h3 style="font-size:0.95rem; font-weight:800; color:#fff;" data-i18n="iot_header">IOT TELEMETRY &amp; AUTOMATED RULE ENGINE</h3>
+                <p style="font-size:0.7rem; color:#94a3b8;" data-i18n="iot_sub">Automated sensor threshold monitoring &amp; alert trigger pipeline</p>
+              </div>
+            </div>
+
+            <!-- Ingestion Form & Auto-Stream Toggle -->
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <button id="btn-auto-stream-tab" type="button" onclick="toggleAutoLiveStream()" style="background:#059669; color:#fff; font-weight:800; font-size:0.75rem; padding:8px 14px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.3);">
+                ⚡ START AUTO-LIVE STREAM
+              </button>
+
+              <form onsubmit="handleIngestTelemetrySubmit(event)" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <span style="font-size:0.7rem; font-family:'JetBrains Mono', monospace; color:#22d3ee; font-weight:bold;" data-i18n="label_manual_ingest">MANUAL INGESTION:</span>
+                <select id="telemetry-sensor-select" style="background:#0f172a; color:#22d3ee; font-weight:bold; font-size:0.75rem; padding:8px 12px; border-radius:8px; border:1px solid #334155; outline:none; cursor:pointer; min-width:200px;">
+                  <option value="">SELECT IOT SENSOR...</option>
+                </select>
+                <input type="number" step="0.1" id="telemetry-value-input" value="4.2" style="background:#0f172a; color:#fff; font-weight:bold; font-size:0.75rem; padding:8px 12px; border-radius:8px; border:1px solid #334155; outline:none; width:90px;" />
+                <button type="submit" style="background:#06b6d4; color:#0b0f19; font-weight:800; font-size:0.75rem; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(6,182,212,0.3);" data-i18n="btn_ingest">
+                  INGEST TELEMETRY
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1rem; font-weight:bold; color:#fff; margin-bottom:12px;" data-i18n="iot_grid_title">ACTIVE IOT SENSOR TELEMETRY GRID</h3>
+          <div id="sensor-grid-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Emergency Alert Broadcast -->
+      <div id="tab-content-alerts" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:8px;" data-i18n="nav_alerts">📢 Emergency Alert Broadcast</h3>
+          <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px;">Broadcast mass emergency notifications to citizens and response teams</p>
+          <form onsubmit="handleSendAlert(event)" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div>
+              <label class="form-label">ALERT SEVERITY</label>
+              <select id="alert-severity" class="form-select">
+                <option value="CRITICAL">🚨 CRITICAL EMERGENCY</option>
+                <option value="WARNING">⚠️ HIGH WARNING</option>
+                <option value="ADVISORY">ℹ️ ADVISORY</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">TARGET REGION</label>
+              <input type="text" id="alert-region" value="Pan-India Disaster Zones" class="form-input" />
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label class="form-label">ALERT MESSAGE</label>
+              <textarea id="alert-message" rows="3" class="form-textarea" placeholder="Enter emergency broadcast message text..."></textarea>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button type="submit" class="btn-primary">📢 BROADCAST EMERGENCY ALERT NOW</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab: Emergency Routes Pathfinder -->
+      <div id="tab-content-routes" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:8px;" data-i18n="route_solver_title">EMERGENCY ROUTE NAVIGATION SOLVER</h3>
+          <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px;" data-i18n="route_solver_sub">Dijkstra pathfinder avoiding flooded &amp; blocked road segments</p>
+          <form onsubmit="handleCalculateRoute(event)" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+            <div>
+              <label class="form-label" data-i18n="label_res_coords">RESOURCE LAT/LNG</label>
+              <input type="text" value="17.3850, 78.4867" class="form-input" />
+            </div>
+            <div>
+              <label class="form-label" data-i18n="label_dest_coords">EMERGENCY DESTINATION</label>
+              <input type="text" value="17.4100, 78.5100" class="form-input" />
+            </div>
+            <div style="grid-column: span 2;">
+              <button type="submit" class="btn-primary" data-i18n="btn_calc_route">CALCULATE SAFE BYPASS ROUTE</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab: Evacuation Planner -->
+      <div id="tab-content-evacuation" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:8px;" data-i18n="nav_evacuation">🔄 Evacuation Planner</h3>
+          <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px;">Coordinate civilian evacuation corridors and relief transport logistics</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-bottom:16px;">
+            <div style="padding:14px; background:#0f172a; border-radius:10px; border:1px solid #1e293b;">
+              <strong style="color:#ef4444; font-size:12px;">Zone A - Inundated Coast</strong>
+              <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Evacuated: 1,850 / 2,400</p>
+              <div style="width:100%; height:6px; background:#1e293b; border-radius:3px; margin-top:6px; overflow:hidden;">
+                <div style="width:77%; height:100%; background:#ef4444;"></div>
+              </div>
+            </div>
+            <div style="padding:14px; background:#0f172a; border-radius:10px; border:1px solid #1e293b;">
+              <strong style="color:#f59e0b; font-size:12px;">Zone B - Landslide Susceptible</strong>
+              <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Evacuated: 920 / 1,200</p>
+              <div style="width:100%; height:6px; background:#1e293b; border-radius:3px; margin-top:6px; overflow:hidden;">
+                <div style="width:76%; height:100%; background:#f59e0b;"></div>
+              </div>
+            </div>
+          </div>
+          <button onclick="handleStartEvacuation(event)" class="btn-primary">🚨 DISPATCH MASS EVACUATION FLEET</button>
+        </div>
+      </div>
+
+      <!-- Tab: Crisis Analytics -->
+      <div id="tab-content-analytics" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:8px;" data-i18n="nav_analytics">📊 Crisis Analytics &amp; KPIs</h3>
+          <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px;">Real-time operational metrics, average response latency, and resource readiness</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+            <div style="padding:16px; background:#0f172a; border-radius:10px; border:1px solid #1e293b; text-align:center;">
+              <span style="font-size:24px; color:#22d3ee; font-weight:800;">4.2 min</span>
+              <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Avg Response Time</p>
+            </div>
+            <div style="padding:16px; background:#0f172a; border-radius:10px; border:1px solid #1e293b; text-align:center;">
+              <span style="font-size:24px; color:#10b981; font-weight:800;">98.4%</span>
+              <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Resource Readiness</p>
+            </div>
+            <div style="padding:16px; background:#0f172a; border-radius:10px; border:1px solid #1e293b; text-align:center;">
+              <span style="font-size:24px; color:#f59e0b; font-weight:800;">30 Active</span>
+              <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Disaster Matrix Nodes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Disaster Simulation Sandbox -->
+      <div id="tab-content-simulation" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:8px;">DIGITAL CRISIS SIMULATION SANDBOX</h3>
+          <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px;">Physics formula disaster impact calculator</p>
+
+          <form id="form-simulation" onsubmit="handleRunSimulation(event)" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
+            <div>
+              <label class="form-label">DISASTER TYPE</label>
+              <select id="sim-type" class="form-select">
+                <option value="Flood">🌊 Flood</option>
+                <option value="Cyclone">🌪 Cyclone</option>
+                <option value="Earthquake">🏚 Earthquake</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">RAINFALL (MM)</label>
+              <input id="sim-rainfall" type="number" value="150" class="form-input" />
+            </div>
+            <div>
+              <label class="form-label">WATER LEVEL (M)</label>
+              <input id="sim-water" type="number" step="0.1" value="4.2" class="form-input" />
+            </div>
+            <div>
+              <label class="form-label">POPULATION DENSITY</label>
+              <input id="sim-pop" type="number" value="1500" class="form-input" />
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button type="submit" class="btn-primary">RUN DISASTER SIMULATION</button>
+            </div>
+          </form>
+
+          <div id="sim-result-container" style="display:none; padding:16px; background:#0f172a; border-radius:12px; border:1px solid #1e293b;">
+            <h4 style="color:#22d3ee; font-size:12px; font-weight:bold; margin-bottom:8px;">SIMULATION OUTPUT METRICS</h4>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; font-family:monospace; font-size:12px;">
+              <div>Affected Pop: <strong id="sim-affected-pop" style="color:#fff;">-</strong></div>
+              <div>Blocked Roads: <strong id="sim-blocked-roads" style="color:#fbbf24;">-</strong></div>
+              <div>Req Rescue Squads: <strong id="sim-req-rescue" style="color:#22d3ee;">-</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Audit Trail History -->
+      <div id="tab-content-audit" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:8px;" data-i18n="nav_audit">📜 Audit Trail History</h3>
+          <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px;">Immutable system activity trail and action logs</p>
+          <div style="background:#0f172a; border-radius:10px; border:1px solid #1e293b; overflow:hidden;">
+            <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+              <thead style="background:#131b2e; color:#22d3ee;">
+                <tr>
+                  <th style="padding:10px;">TIMESTAMP</th>
+                  <th style="padding:10px;">ACTION</th>
+                  <th style="padding:10px;">ROLE</th>
+                  <th style="padding:10px;">STATUS</th>
+                </tr>
+              </thead>
+              <tbody style="color:#cbd5e1;">
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:10px; font-family:monospace;">2026-09-11 01:50:12</td>
+                  <td style="padding:10px;">Telemetry Ingested [SNS-FL-01]</td>
+                  <td style="padding:10px;">AUTHORITY</td>
+                  <td style="padding:10px; color:#10b981;">SUCCESS</td>
+                </tr>
+                <tr style="border-bottom:1px solid #1e293b;">
+                  <td style="padding:10px; font-family:monospace;">2026-09-11 01:48:45</td>
+                  <td style="padding:10px;">Ambulance Dispatched [AMB-04]</td>
+                  <td style="padding:10px;">RESCUE TEAM</td>
+                  <td style="padding:10px; color:#10b981;">DISPATCHED</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Citizen Portal -->
+      <div id="tab-content-citizen-portal" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:24px; margin-bottom:20px;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <div style="width:44px; height:44px; border-radius:12px; background:rgba(6,182,212,0.15); border:1px solid rgba(6,182,212,0.3); display:flex; align-items:center; justify-content:center; color:#22d3ee; font-size:22px;">
+              👤
+            </div>
+            <div>
+              <h3 style="font-size:1.15rem; font-weight:800; color:#fff;" data-i18n="nav_citizen_portal">CITIZEN EMERGENCY REPORTING &amp; COMPLAINT PORTAL</h3>
+              <p style="font-size:0.75rem; color:#94a3b8;" data-i18n="cit_sub">Lodge an official emergency complaint directly with your cause, contact phone number, address, and situation details</p>
+            </div>
+          </div>
+
+          <form onsubmit="handleCitizenComplaintSubmit(event)" style="display:grid; grid-template-columns:1fr 1fr; gap:14px; background:#0f172a; padding:20px; border-radius:14px; border:1px solid #1e293b; margin-bottom:24px;">
+            <div>
+              <label class="form-label" data-i18n="lbl_cit_name">CITIZEN FULL NAME *</label>
+              <input id="cit-name" type="text" required placeholder="e.g. Lakshman Chowdary" class="form-input" />
+            </div>
+
+            <div>
+              <label class="form-label" data-i18n="lbl_cit_phone">PHONE NUMBER *</label>
+              <input id="cit-phone" type="tel" required placeholder="e.g. +91 98765 43210" class="form-input" />
+            </div>
+
+            <div>
+              <label class="form-label" data-i18n="lbl_cit_cause">EMERGENCY CAUSE / DISASTER TYPE *</label>
+              <select id="cit-cause" class="form-select">
+                <option value="Flood / Waterlogging">🌊 Flood / Severe Waterlogging</option>
+                <option value="Landslide / Mudflow">⛰️ Landslide / Debris Flow</option>
+                <option value="Building Collapse">🏚️ Building / Structure Collapse</option>
+                <option value="Fire / Gas Leak">🔥 Fire Hazard / Gas Leak</option>
+                <option value="Medical Emergency">🏥 Medical Crisis / Casualty</option>
+                <option value="Cyclone / Wind Storm">🌪️ Severe Cyclone / Heavy Storm</option>
+                <option value="Road Blocked / Impassable">🛣️ Road Obstruction / Bridge Damage</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label" data-i18n="lbl_cit_address">ADDRESS &amp; LANDMARK *</label>
+              <input id="cit-address" type="text" required placeholder="e.g. House No. 4-12, Main Road, Secunderabad, Telangana" class="form-input" />
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <label class="form-label" data-i18n="lbl_cit_desc">SITUATION DETAILS &amp; IMMEDIATE HELP NEEDED *</label>
+              <textarea id="cit-desc" rows="3" required placeholder="Describe what caused the emergency, current situation at your address, number of trapped/affected people, and what help is needed immediately..." class="form-textarea"></textarea>
+            </div>
+
+            <div style="grid-column: 1 / -1;">
+              <button type="submit" class="btn-primary" style="font-size:0.85rem; padding:12px 24px; box-shadow:0 6px 20px rgba(6,182,212,0.3);" data-i18n="btn_submit_complaint">
+                🛡️ SUBMIT OFFICIAL EMERGENCY COMPLAINT
+              </button>
+            </div>
+          </form>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h4 style="font-size:0.95rem; font-weight:800; color:#22d3ee;" data-i18n="cit_feed_title">LIVE SUBMITTED CITIZEN COMPLAINTS FEED</h4>
+            <span style="font-size:0.7rem; font-family:'JetBrains Mono', monospace; color:#64748b;" data-i18n="cit_feed_sub">Real-Time Verification Pipeline</span>
+          </div>
+
+          <div id="citizen-reports-feed-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:14px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Rescue Team Board -->
+      <div id="tab-content-rescue-dashboard" class="tab-content" style="display:none;">
+        <div class="glass-panel" style="padding:20px;">
+          <h3 style="font-size:1.1rem; font-weight:bold; color:#fff; margin-bottom:8px;" data-i18n="nav_rescue_dashboard">🛟 Rescue Team Board</h3>
+          <p style="font-size:0.75rem; color:#94a3b8; margin-bottom:16px;">Active rescue squad status and tactical dispatch board</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
+            <div style="padding:14px; background:#0f172a; border-radius:10px; border:1px solid #1e293b;">
+              <div style="display:flex; justify-content:space-between;">
+                <strong style="color:#fff; font-size:12px;">NDRF Alpha Squad</strong>
+                <span style="color:#10b981; font-weight:bold; font-size:10px;">READY</span>
+              </div>
+              <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Sector: Kerala Coast | Members: 12</p>
+            </div>
+            <div style="padding:14px; background:#0f172a; border-radius:10px; border:1px solid #1e293b;">
+              <div style="display:flex; justify-content:space-between;">
+                <strong style="color:#fff; font-size:12px;">SDRF Rescue Unit 3</strong>
+                <span style="color:#3b82f6; font-weight:bold; font-size:10px;">DISPATCHED</span>
+              </div>
+              <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Sector: Wayanad Sector | Members: 8</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Drone Inspection HUD Modal -->
+  <div id="drone-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="drone-modal-title" style="color:#fff; font-size:0.9rem; font-weight:bold;">DRONE RECON HUD</h3>
+        <button onclick="closeDroneModal()" style="background:none; border:none; color:#94a3b8; font-size:1rem; cursor:pointer;">✕</button>
+      </div>
+
+      <div class="drone-hud">
+        <div class="drone-hud-overlay">
+          <div>[REC 🟢 HD 1080P 60FPS] NAV: GPS LOCK</div>
+          <div class="drone-crosshair"></div>
+          <div id="drone-telemetry-text">LAT: 17.3850 | LNG: 78.4867 | ALT: 120m | THERMAL: ACTIVE</div>
+        </div>
+        <!-- Drone Camera Simulated View background -->
+        <div style="width:100%; height:100%; background:radial-gradient(circle, #0f172a 0%, #020617 100%); display:flex; align-items:center; justify-content:center; color:#22d3ee; font-family:monospace; font-size:12px;">
+          LIVE DRONE OPTICAL RECONNAISSANCE STREAM
+        </div>
+      </div>
+
+      <button onclick="closeDroneModal()" class="btn-primary">CLOSE RECON HUD</button>
+    </div>
+  </div>
+
+  <!-- Register Incident Modal -->
+  <div id="create-incident-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color:#fff; font-size:0.9rem; font-weight:bold;">REGISTER NEW EMERGENCY INCIDENT</h3>
+        <button onclick="closeCreateIncidentModal()" style="background:none; border:none; color:#94a3b8; font-size:1rem; cursor:pointer;">✕</button>
+      </div>
+      <form id="form-create-incident" onsubmit="handleCreateIncidentSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">TITLE</label>
+          <input id="inc-form-title" type="text" required placeholder="e.g. River Bank Inundation" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">DISASTER TYPE</label>
+          <select id="inc-form-type" class="form-select">
+            <option value="Flood">🌊 Flood</option>
+            <option value="Fire">🔥 Fire</option>
+            <option value="Accident">🚗 Accident</option>
+            <option value="Medical Emergency">🏥 Medical</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">AFFECTED POPULATION</label>
+          <input id="inc-form-pop" type="number" value="500" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">DESCRIPTION</label>
+          <textarea id="inc-form-desc" rows="2" class="form-textarea"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">REGISTER & CALCULATE PRIORITY SCORE</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Resource Allocator Modal -->
+  <div id="allocator-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="allocator-inc-title" style="color:#fff; font-size:0.9rem; font-weight:bold;">RESOURCE ALLOCATOR</h3>
+        <button onclick="closeAllocatorModal()" style="background:none; border:none; color:#94a3b8; font-size:1rem; cursor:pointer;">✕</button>
+      </div>
+      <div id="allocator-recs-list"></div>
+    </div>
+  </div>
+
+  <!-- Incident Detail Modal -->
+  <div id="detail-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="detail-inc-title" style="color:#fff; font-size:0.9rem; font-weight:bold;">INCIDENT DETAILS</h3>
+        <button onclick="closeDetailModal()" style="background:none; border:none; color:#94a3b8; font-size:1rem; cursor:pointer;">✕</button>
+      </div>
+      <p id="detail-inc-desc" style="color:#cbd5e1; font-size:12px; margin-bottom:10px;"></p>
+      <div style="background:#0f172a; padding:10px; border-radius:8px; font-family:monospace; font-size:11px; color:#22d3ee; margin-bottom:12px;">
+        Reason: <span id="detail-inc-reason"></span>
+      </div>
+      <button onclick="closeDetailModal()" class="btn-primary">CLOSE LOG</button>
+    </div>
+  </div>
+
+  <!-- 29-Step Demo Modal -->
+  <div id="demo-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="color:#fff; font-size:0.9rem; font-weight:bold;">29-STEP FLOOD CRISIS DEMO SCENARIO</h3>
+        <button onclick="closeDemoModal()" style="background:none; border:none; color:#94a3b8; font-size:1rem; cursor:pointer;">✕</button>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; font-size:11px; font-family:monospace; color:#94a3b8; margin-bottom:4px;">
+          <span id="demo-step-num">Step 1 of 29</span>
+          <span id="demo-progress-pct" style="color:#22d3ee; font-weight:bold;">3% Completed</span>
+        </div>
+        <div style="width:100%; height:6px; background:#0f172a; border-radius:4px; overflow:hidden;">
+          <div id="demo-progress-bar" style="width:3%; height:100%; background:#22d3ee;"></div>
+        </div>
+      </div>
+      <div style="padding:12px; background:#0f172a; border-radius:8px; font-size:12px; color:#fff; font-weight:bold; margin-bottom:16px;" id="demo-step-text">
+        1. Rainfall intensity increases in Musi River Catchment
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button id="btn-auto-demo" onclick="autoPlayDemo()" style="flex:1; background:#f59e0b; color:#0b0f19; font-weight:bold; font-size:11px; padding:10px; border-radius:8px; border:none; cursor:pointer;">
+          AUTO-PLAY DEMO
+        </button>
+        <button onclick="nextDemoStep()" style="flex:1; background:#0891b2; color:#fff; font-weight:bold; font-size:11px; padding:10px; border-radius:8px; border:none; cursor:pointer;">
+          NEXT STEP ▶
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pure JS Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="/static/js/api.js?v=20260911_v20"></script>
+  <script src="/static/js/map.js?v=20260911_v20"></script>
+  <script src="/static/js/demo.js?v=20260911_v20"></script>
+  <script src="/static/js/app.js?v=20260911_v20"></script>
+</body>
+</html>
