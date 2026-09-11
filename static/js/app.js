@@ -400,22 +400,28 @@ async function loadDashboardData() {
       CrisisAPI.getKPIs()
     ]);
 
-    globalIncidents = inc;
-    globalHospitals = hosp;
-    globalShelters = shl;
-    globalResources = res;
-    globalSensors = sns;
+    const safeInc = Array.isArray(inc) ? inc : [];
+    const safeHosp = Array.isArray(hosp) ? hosp : [];
+    const safeShl = Array.isArray(shl) ? shl : [];
+    const safeRes = Array.isArray(res) ? res : [];
+    const safeSns = Array.isArray(sns) ? sns : [];
 
-    updateKPICounters(kpis);
-    renderMapIncidents(inc);
-    renderMapHospitals(hosp);
-    renderMapShelters(shl);
-    renderMapSensors(sns);
-    renderIncidentList(inc);
-    renderResourceList(res);
-    renderHospitalList(hosp);
-    renderShelterList(shl);
-    renderSensorGrid(sns);
+    globalIncidents = safeInc;
+    globalHospitals = safeHosp;
+    globalShelters = safeShl;
+    globalResources = safeRes;
+    globalSensors = safeSns;
+
+    updateKPICounters(kpis || {});
+    renderMapIncidents(safeInc);
+    renderMapHospitals(safeHosp);
+    renderMapShelters(safeShl);
+    renderMapSensors(safeSns);
+    renderIncidentList(safeInc);
+    renderResourceList(safeRes);
+    renderHospitalList(safeHosp);
+    renderShelterList(safeShl);
+    renderSensorGrid(safeSns);
     loadCitizenReports();
     applyCurrentLanguage();
   } catch (e) {

@@ -1,6 +1,13 @@
 import os
 from pydantic_settings import BaseSettings
 
+def get_default_db_url():
+    if os.getenv("DATABASE_URL"):
+        return os.getenv("DATABASE_URL")
+    if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        return "sqlite:////tmp/crisis_command.db"
+    return "sqlite:///./crisis_command.db"
+
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Digital Crisis Command Center"
     VERSION: str = "1.0.0"
@@ -10,7 +17,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
     
     # Database: SQLite fallback for local running, PostgreSQL for production
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./crisis_command.db")
+    DATABASE_URL: str = get_default_db_url()
     
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",

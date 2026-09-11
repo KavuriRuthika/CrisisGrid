@@ -72,7 +72,10 @@ async function safeFetch(url, options = {}, mockFallback = null) {
     if (res.ok) {
       const contentType = res.headers.get('content-type');
       if (contentType && contentType.includes('application/json')) {
-        return await res.json();
+        const data = await res.json();
+        if (data && !data.detail && !data.error) {
+          return data;
+        }
       }
     }
   } catch (e) {
@@ -83,7 +86,7 @@ async function safeFetch(url, options = {}, mockFallback = null) {
   if (typeof mockFallback === 'function') {
     return mockFallback();
   }
-  return { status: 'fallback', message: 'Executed in offline fallback mode' };
+  return [];
 }
 
 const CrisisAPI = {
