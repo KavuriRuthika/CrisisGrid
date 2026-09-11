@@ -785,8 +785,18 @@ function switchTab(tabId) {
   const activeContent = document.getElementById(`tab-content-${tabId}`);
   if (activeContent) {
     activeContent.style.display = 'block';
+    if (tabId === 'command-center' && mainMap) {
+      setTimeout(() => { mainMap.invalidateSize(); }, 150);
+    }
+    setTimeout(() => {
+      activeContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   } else {
-    document.getElementById('tab-content-command-center').style.display = 'block';
+    const cmd = document.getElementById('tab-content-command-center');
+    if (cmd) {
+      cmd.style.display = 'block';
+      if (mainMap) setTimeout(() => { mainMap.invalidateSize(); }, 150);
+    }
   }
 }
 

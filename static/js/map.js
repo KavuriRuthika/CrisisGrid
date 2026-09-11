@@ -16,10 +16,10 @@ let sensorMarkers = [];
 let resourceMarkers = [];
 let routePolyline = null;
 
-// Initial Center: GLOBAL MATRIX (Lat: 20.0, Lng: 50.0 - Matches User Screenshot!)
-const INDIA_CENTER = [20.5937, 78.9629];
-const GLOBAL_CENTER = [20.0, 50.0];
-const DEFAULT_ZOOM = 4; // Global street/country matrix view zoom level
+// Initial Center: HYDERABAD & PAN-INDIA CRISIS MATRIX
+const INDIA_CENTER = [17.3850, 78.4866];
+const GLOBAL_CENTER = [17.3850, 78.4866];
+const DEFAULT_ZOOM = 11; // Clear city-wide street level zoom showing all disaster markers spread out
 
 function initCrisisMap() {
   if (mainMap) return;
