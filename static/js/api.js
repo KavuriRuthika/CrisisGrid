@@ -28,29 +28,29 @@ const defaultIncidents = [
 ];
 
 const defaultHospitals = [
-  { id: 1, name: "Osmania General Hospital", lat: 17.3730, lng: 78.4750, available_beds: 18, icu_beds: 4, status: "AVAILABLE" },
-  { id: 2, name: "Gandhi Hospital", lat: 17.4240, lng: 78.5030, available_beds: 30, icu_beds: 8, status: "AVAILABLE" },
-  { id: 3, name: "NIMS Punjagutta", lat: 17.4245, lng: 78.4520, available_beds: 12, icu_beds: 2, status: "AVAILABLE" },
-  { id: 4, name: "Apollo Hospitals Jubilee Hills", lat: 17.4160, lng: 78.4110, available_beds: 25, icu_beds: 6, status: "AVAILABLE" }
+  { id: 1, name: "Osmania General Hospital", lat: 17.3730, lng: 78.4750, available_beds: 18, total_beds: 50, icu_available: 4, icu_total: 10, status: "AVAILABLE", phone: "+91 40 2460 0121", address: "Afzal Gunj, Hyderabad" },
+  { id: 2, name: "Gandhi Hospital", lat: 17.4240, lng: 78.5030, available_beds: 30, total_beds: 80, icu_available: 8, icu_total: 20, status: "AVAILABLE", phone: "+91 40 2750 5566", address: "Musheerabad, Hyderabad" },
+  { id: 3, name: "NIMS Punjagutta", lat: 17.4245, lng: 78.4520, available_beds: 12, total_beds: 40, icu_available: 2, icu_total: 8, status: "AVAILABLE", phone: "+91 40 2339 6552", address: "Punjagutta, Hyderabad" },
+  { id: 4, name: "Apollo Hospitals Jubilee Hills", lat: 17.4160, lng: 78.4110, available_beds: 25, total_beds: 60, icu_available: 6, icu_total: 15, status: "AVAILABLE", phone: "+91 40 2360 7777", address: "Jubilee Hills, Hyderabad" }
 ];
 
 const defaultShelters = [
-  { id: 1, name: "Gachibowli Indoor Stadium Relief Center", lat: 17.4430, lng: 78.3480, capacity: 1000, current_occupancy: 420, status: "AVAILABLE" },
-  { id: 2, name: "LB Stadium Relief Camp", lat: 17.3970, lng: 78.4750, capacity: 800, current_occupancy: 310, status: "AVAILABLE" },
-  { id: 3, name: "Begumpet High School Relief Center", lat: 17.4440, lng: 78.4680, capacity: 600, current_occupancy: 150, status: "AVAILABLE" }
+  { id: 1, name: "Gachibowli Indoor Stadium Relief Center", lat: 17.4430, lng: 78.3480, capacity: 1000, max_capacity: 1000, current_occupancy: 420, status: "AVAILABLE", address: "Gachibowli, Hyderabad" },
+  { id: 2, name: "LB Stadium Relief Camp", lat: 17.3970, lng: 78.4750, capacity: 800, max_capacity: 800, current_occupancy: 310, status: "AVAILABLE", address: "Basheerbagh, Hyderabad" },
+  { id: 3, name: "Begumpet High School Relief Center", lat: 17.4440, lng: 78.4680, capacity: 600, max_capacity: 600, current_occupancy: 150, status: "AVAILABLE", address: "Begumpet, Hyderabad" }
 ];
 
 const defaultResources = [
-  { id: 1, name: "NDRF Rescue Squad T01", resource_type: "RESCUE_TEAM", status: "AVAILABLE", lat: 17.3900, lng: 78.4800 },
-  { id: 2, name: "NDRF Rescue Squad T02", resource_type: "RESCUE_TEAM", status: "AVAILABLE", lat: 17.4300, lng: 78.4500 },
-  { id: 3, name: "Emergency Ambulance AMB-01", resource_type: "AMBULANCE", status: "AVAILABLE", lat: 17.3750, lng: 78.4730 },
-  { id: 4, name: "Emergency Ambulance AMB-04", resource_type: "AMBULANCE", status: "AVAILABLE", lat: 17.4200, lng: 78.5000 }
+  { id: 1, resource_id: 1, name: "NDRF Rescue Squad T01", code: "RSC-T01", resource_type: "RESCUE_TEAM", status: "AVAILABLE", contact_phone: "+91 98490 11111", distance_km: 2.1, eta_minutes: 6, lat: 17.3900, lng: 78.4800 },
+  { id: 2, resource_id: 2, name: "NDRF Rescue Squad T02", code: "RSC-T02", resource_type: "RESCUE_TEAM", status: "AVAILABLE", contact_phone: "+91 98490 22222", distance_km: 3.4, eta_minutes: 9, lat: 17.4300, lng: 78.4500 },
+  { id: 3, resource_id: 3, name: "Emergency Ambulance AMB-01", code: "AMB-01", resource_type: "AMBULANCE", status: "AVAILABLE", contact_phone: "+91 108 000 001", distance_km: 1.5, eta_minutes: 4, lat: 17.3750, lng: 78.4730 },
+  { id: 4, resource_id: 4, name: "Emergency Ambulance AMB-04", code: "AMB-04", resource_type: "AMBULANCE", status: "AVAILABLE", contact_phone: "+91 108 000 004", distance_km: 4.8, eta_minutes: 12, lat: 17.4200, lng: 78.5000 }
 ];
 
 const defaultSensors = [
-  { id: 1, sensor_code: "WTR-101", sensor_type: "WATER_LEVEL", location_name: "Musi River Basin Sector 4", current_value: 4.2, status: "CRITICAL" },
-  { id: 2, sensor_code: "RNF-202", sensor_type: "RAINFALL", location_name: "Hyderabad Urban Region", current_value: 128.5, status: "WARNING" },
-  { id: 3, sensor_code: "TMP-303", sensor_type: "TEMPERATURE", location_name: "HITEC Industrial Area", current_value: 38.4, status: "NORMAL" }
+  { id: 1, sensor_code: "WTR-101", sensor_type: "WATER_LEVEL", location_name: "Musi River Basin Sector 4", current_value: 4.2, unit: "m", critical_threshold: 4.0, status: "CRITICAL" },
+  { id: 2, sensor_code: "RNF-202", sensor_type: "RAINFALL", location_name: "Hyderabad Urban Region", current_value: 128.5, unit: "mm", critical_threshold: 100.0, status: "WARNING" },
+  { id: 3, sensor_code: "TMP-303", sensor_type: "TEMPERATURE", location_name: "HITEC Industrial Area", current_value: 38.4, unit: "°C", critical_threshold: 45.0, status: "NORMAL" }
 ];
 
 const defaultAlerts = [
@@ -76,7 +76,7 @@ async function safeFetch(url, options = {}, mockFallback = null) {
       }
     }
   } catch (e) {
-    // Backend offline or running on static host (e.g. Netlify)
+    // Backend offline or running on static host (e.g. Netlify/Vercel)
   }
 
   // Fallback to mock logic if provided
@@ -187,7 +187,7 @@ const CrisisAPI = {
         s.status = currentValue >= 4.0 ? 'CRITICAL' : currentValue >= 3.0 ? 'WARNING' : 'NORMAL';
         MockStore.set('sensors', sensors);
       }
-      return { status: "INGESTED", sensor_code: sensorCode, current_value: currentValue };
+      return { status: "INGESTED", sensor_code: sensorCode, current_value: currentValue, message: `Sensor updated to ${currentValue}` };
     });
   },
 
@@ -229,17 +229,27 @@ const CrisisAPI = {
       const midLat = (sLat + eLat) / 2 + 0.008;
       const midLng = (sLng + eLng) / 2 - 0.008;
 
+      const pathCoords = [
+        [sLat, sLng],
+        [midLat, midLng],
+        [eLat, eLng]
+      ];
+
       return {
+        status: "SUCCESS",
         route_id: `RTE-${Math.floor(Math.random()*9000)+1000}`,
         vehicle_type: vehicleType,
         distance_km: 6.4,
         estimated_time_mins: 12.5,
         avoided_hazards_count: 2,
-        path_coordinates: [
-          [sLat, sLng],
-          [midLat, midLng],
-          [eLat, eLng]
-        ]
+        routes: [
+          {
+            name: "Northern Bypass Emergency Route",
+            distance_km: 6.4,
+            coordinates: pathCoords
+          }
+        ],
+        path_coordinates: pathCoords
       };
     });
   },
@@ -250,9 +260,11 @@ const CrisisAPI = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ zone_id: zoneId, target_population: targetPopulation })
     }, () => ({
-      plan_id: `EVC-${Math.floor(Math.random()*9000)+1000}`,
+      plan_id: 1,
+      plan_code: `EVC-${Math.floor(Math.random()*9000)+1000}`,
       status: "ACTIVE",
-      total_evacuated: targetPopulation || 500,
+      target_population: targetPopulation || 3500,
+      total_evacuated: targetPopulation || 3500,
       assigned_shelter: "Gachibowli Relief Center",
       message: "Evacuation plan generated and dispatched."
     }));
@@ -270,9 +282,13 @@ const CrisisAPI = {
         critical_incidents: critical || 3,
         high_priority_incidents: high || 4,
         available_ambulances: 9,
+        ambulances_available: 9,
         available_rescue_teams: 6,
+        rescue_teams_available: 6,
         hospital_beds: 48,
-        shelter_capacity: 2400
+        hospital_beds_available: 48,
+        shelter_capacity: 2400,
+        shelter_capacity_available: 2400
       };
     });
   },
@@ -287,13 +303,20 @@ const CrisisAPI = {
         water_level_m: waterLevel,
         population_density: population
       })
-    }, () => ({
-      simulation_id: `SIM-${Math.floor(Math.random()*9000)+1000}`,
-      risk_level: waterLevel >= 4.0 || rainfall >= 100 ? "CRITICAL" : "HIGH",
-      estimated_affected: Math.round((waterLevel || 3) * (population || 1000) * 0.4),
-      required_rescue_teams: Math.ceil((population || 1000) / 250),
-      recommended_evacuation_routes: 2
-    }));
+    }, () => {
+      const affected = Math.round((waterLevel || 3) * (population || 1000) * 0.4);
+      const blocked = Math.round((rainfall || 100) / 25.0);
+      const teams = Math.ceil((population || 1000) / 250);
+      return {
+        simulation_id: `SIM-${Math.floor(Math.random()*9000)+1000}`,
+        risk_level: waterLevel >= 4.0 || rainfall >= 100 ? "CRITICAL" : "HIGH",
+        affected_population: affected,
+        estimated_affected: affected,
+        blocked_roads_count: blocked,
+        required_rescue_teams: teams,
+        recommended_evacuation_routes: 2
+      };
+    });
   },
 
   async getAuditLogs() {
