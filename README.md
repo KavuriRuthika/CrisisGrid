@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# Digital Crisis Command Center — Real-Time Emergency Management Platform
+# CrisisGrid: Real-Time Emergency Response & Coordination Platform
 
 An integrated real-time **Digital Crisis Command Center** that brings fragmented emergency information into one centralized platform. It enables authorities to detect incidents, classify severity, calculate priority rankings, coordinate resources, solve safe emergency routes, manage evacuation plans, communicate multilingual warnings, and monitor response metrics from a single command center.
 
@@ -24,76 +23,31 @@ An integrated real-time **Digital Crisis Command Center** that brings fragmented
 11. **Rescue Team Field Task Board**: Mobile execution board with action buttons (`ACCEPT ASSIGNMENT`, `START JOURNEY`, `ARRIVED ON SCENE`, `OPERATION COMPLETED`).
 12. **Multilingual Emergency Alert System**: Predefined static translation engine supporting English, Telugu (తెలుగు), and Hindi (हिन्दी).
 13. **Digital Crisis Simulation Sandbox**: Physics-based formula sandbox for stress-testing disaster variables (rainfall, water levels, population density).
-14. **Crisis Analytics & KPIs**: Recharts dashboards comparing response efficiency metrics before system (18 mins) vs after system (11 mins).
+14. **Crisis Analytics & KPIs**: Dashboards comparing response efficiency metrics before system (18 mins) vs after system (11 mins).
 15. **Interactive 29-Step Crisis Demo Scenario**: Built-in automated scenario runner executing an end-to-end flood disaster response lifecycle.
 
 ---
 
 ## 🏗 Technology Stack
 
-- **Backend**: FastAPI (Python 3.10+), Async WebSockets, SQLAlchemy 2.0 ORM, Pydantic V2, Passlib, PyJWT, Pytest
-- **Frontend**: React 18, Vite, TypeScript, Tailwind CSS, Leaflet / React-Leaflet, Recharts, Lucide Icons, Axios
+- **Backend**: FastAPI (Python 3.10+), Async WebSockets, SQLAlchemy 2.0 ORM, Pydantic V2
+- **Frontend**: HTML5, Vanilla JavaScript, CSS3, Leaflet.js
 - **Database**: PostgreSQL / SQLite (Automatic fallback for zero-dependency local execution)
-- **Deployment**: Docker, Docker Compose
 
 ---
 
 ## 🚀 Quick Start Guide
 
-### Option 1: Direct Execution (Python + Node)
+### Direct Execution
 
 1. **Start Backend Server**:
    ```bash
    python app.py
    ```
    *Backend running at http://127.0.0.1:8000*
-   *API documentation at http://127.0.0.1:8000/docs*
-
-2. **Start Frontend Dev Server**:
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-   *Frontend running at http://localhost:5173*
-
----
-
-### Option 2: Docker Compose Deployment
-
-```bash
-docker-compose up --build
-```
-
----
-
-## 🧪 Running Automated Tests
-
-Run the complete backend test suite:
-```bash
-cd backend
-python -m pytest -v
-```
-
----
-
-## 👥 Demo Test Accounts (Role-Based Access)
-
-| Role | Username | Password | Purpose |
-|---|---|---|---|
-| **AUTHORITY** | `authority` | `auth123` | Full Operations Command Center |
-| **RESCUE_TEAM** | `rescueteam` | `rescue123` | Rescue Squad Task Execution Board |
-| **HOSPITAL** | `hospital` | `hosp123` | Bed & ICU Capacity Management |
-| **SHELTER** | `shelter` | `shelter123` | Relief Shelter Occupancy & Supplies |
-| **CITIZEN** | `citizen` | `citizen123` | Citizen Emergency Reporting Portal |
-| **ADMIN** | `admin` | `admin123` | System Administrator Access |
 
 ---
 
 ## 📜 Tagline & Motto
 
 **DETECT. COORDINATE. RESPOND. RESOLVE.**
-=======
-# CrisisGrid
-Real-Time Emergency Response &amp; Coordination Platform
->>>>>>> e7c10ed2a7ed87eb6ce29e7a1455af8eca1d1549

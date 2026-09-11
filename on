@@ -1,0 +1,21 @@
+warning: in the working copy of 'frontend/package.json', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/frontend/package.json b/frontend/package.json[m
+[1mindex 26a473d..9d4e9d5 100644[m
+[1m--- a/frontend/package.json[m
+[1m+++ b/frontend/package.json[m
+[36m@@ -5,7 +5,7 @@[m
+   "type": "module",[m
+   "scripts": {[m
+     "dev": "vite",[m
+[31m-    "build": "tsc && vite build",[m
+[32m+[m[32m    "build": "vite build",[m
+     "preview": "vite preview"[m
+   },[m
+   "dependencies": {[m
+[36m@@ -31,4 +31,4 @@[m
+     "typescript": "^5.2.2",[m
+     "vite": "^5.0.0"[m
+   }[m
+[31m-}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
