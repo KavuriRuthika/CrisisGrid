@@ -39,17 +39,32 @@ async def add_no_cache_headers(request, call_next):
     response.headers["Expires"] = "0"
     return response
 
-# Create tables and seed data on startup
+# Create tables and seed data on startup if empty
 @app.on_event("startup")
 def startup_event():
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
     try:
-        seed_database(db)
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        try:
+            from app.models import Incident
+            if not db.query(Incident).first():
+                seed_database(db)
+        except Exception as e:
+            logger.error(f"Error seeding database: {e}")
+        finally:
+            db.close()
     except Exception as e:
-        logger.error(f"Error seeding database: {e}")
-    finally:
-        db.close()
+        logger.error(f"Error during startup_event: {e}")
+
+@app.get("/api")
+@app.get("/api/health")
+def api_health_check():
+    return {
+        "status": "online",
+        "service": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "mode": "deterministic_fullstack"
+    }
 
 # API Routers
 app.include_router(auth.router, prefix=settings.API_V1_STR)
